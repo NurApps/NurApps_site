@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "title": "NurApps",
+    "description": "NurApps — catalog of open-source applications"
+  },
+  "nav": {
+    "home": "Home",
+    "apps": "Apps",
+    "faq": "FAQ",
+    "news": "News",
+    "about": "About"
+  },
+  "hero": {
+    "title": "NurApps",
+    "subtitle": "Open-source applications",
+    "description": "We create free software for everyone. All our apps are available on GitHub and distributed under open licenses.",
+    "github": "GitHub",
+    "explore_apps": "Explore Apps"
+  },
+  "about": {
+    "title": "About Us",
+    "content": "NurApps is a team of developers building high-quality open-source applications. Our mission is to make technology accessible to everyone. All our projects are distributed under open licenses, and we welcome community contributions.",
+    "values_title": "Our Values",
+    "values": [
+      "Open source — transparency and trust",
+      "Accessibility — apps for all platforms",
+      "Community — collaborative development",
+      "Quality — testing and stability"
+    ]
+  },
+  "catalog": {
+    "title": "Our Apps",
+    "subtitle": "Discover our projects",
+    "all": "All",
+    "windows": "Windows",
+    "android": "Android",
+    "linux": "Linux",
+    "web": "Web",
+    "view_details": "Details",
+    "download": "Download",
+    "source_code": "Source Code",
+    "requirements": "System Requirements",
+    "license": "License",
+    "versions": "Versions",
+    "latest_version": "Latest Version",
+    "old_versions": "Old Versions",
+    "close": "Close",
+    "platforms": "Platforms",
+    "size": "Size",
+    "views": "Views",
+    "downloads": "Downloads"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "questions": [
+      {
+        "q": "What is NurApps?",
+        "a": "NurApps is a team of developers creating free open-source applications for various platforms."
+      },
+      {
+        "q": "Are the apps free?",
+        "a": "Yes, all our apps are completely free and distributed under open licenses (MIT, GPL, AGPL)."
+      },
+      {
+        "q": "How can I contribute?",
+        "a": "You can fork our repository on GitHub, make changes, and create a Pull Request. We review all contributions."
+      },
+      {
+        "q": "Which platforms are supported?",
+        "a": "Our apps are available for Windows, Android, Linux, and web browsers. Each app lists its supported platforms."
+      },
+      {
+        "q": "How do I report a bug?",
+        "a": "Go to the Issues section of the corresponding GitHub repository and create a new issue describing the problem."
+      },
+      {
+        "q": "How often are updates released?",
+        "a": "We release updates as needed. All updates are automatically reflected on the website."
+      }
+    ]
+  },
+  "news": {
+    "title": "NurApps News",
+    "subtitle": "Latest events and updates",
+    "read_more": "Read more",
+    "no_news": "No news yet"
+  },
+  "footer": {
+    "copyright": "NurApps. All rights reserved.",
+    "made_with": "Made with",
+    "open_source": "Open Source",
+    "contact": "Contact"
+  },
+  "stats": {
+    "total_apps": "Apps",
+    "total_downloads": "Downloads",
+    "total_stars": "GitHub Stars",
+    "active_devs": "Developers"
+  }
+}

@@ -1,0 +1,49 @@
+"use client";
+
+import { useI18n } from "./I18nProvider";
+import { news } from "@/config/news";
+import { Calendar, ArrowRight } from "lucide-react";
+
+export default function News() {
+  const { t, locale } = useI18n();
+
+  return (
+    <section id="news" className="py-24 bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{t.news.title}</h2>
+          <p className="text-lg text-gray-500 dark:text-gray-400">{t.news.subtitle}</p>
+        </div>
+
+        {news.length === 0 ? (
+          <p className="text-center text-gray-400 dark:text-gray-500">{t.news.no_news}</p>
+        ) : (
+          <div className="space-y-4">
+            {news.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl">{item.icon}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 mb-2">
+                      <Calendar className="w-4 h-4" />
+                      {item.date}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {item.title[locale]}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {item.content[locale]}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
