@@ -42,4 +42,4 @@ npm run build
 
 ## Лицензия
 
-MIT
+GPL-3.0 — см. [LICENSE](LICENSE)
