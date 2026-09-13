@@ -32,6 +32,14 @@
     "title": "Our Apps",
     "subtitle": "Discover our projects",
     "all": "All",
+    "search": "Search apps",
+    "filter_by_platform": "Filter by platform",
+    "stats_note": "Figures are listed per app; no update date is provided.",
+    "no_results": "No apps match these filters.",
+    "reset_filters": "Clear search and filter",
+    "download_for": "Download for",
+    "open_web_app": "Open web app",
+    "view_releases": "All releases on GitHub",
     "windows": "Windows",
     "android": "Android",
     "linux": "Linux",
@@ -77,7 +85,9 @@
         "q": "How often are updates released?",
         "a": "We release updates as needed. All updates are automatically reflected on the website."
       }
-    ]
+    ],
+    "show_more": "Show more questions",
+    "show_less": "Hide extra questions"
   },
   "news": {
     "title": "NurApps News",

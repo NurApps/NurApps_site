@@ -7,6 +7,8 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 export default function FAQ() {
   const { t } = useI18n();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const visibleQuestions = showAll ? t.faq.questions : t.faq.questions.slice(0, 4);
 
   return (
     <section id="faq" className="py-24 bg-white dark:bg-gray-950">
@@ -16,12 +18,15 @@ export default function FAQ() {
         </div>
 
         <div className="space-y-3">
-          {t.faq.questions.map((item, i) => (
+          {visibleQuestions.map((item, i) => (
             <div
               key={i}
               className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
             >
               <button
+                type="button"
+                aria-expanded={openIndex === i}
+                aria-controls={`faq-answer-${i}`}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full px-6 py-4 flex items-center justify-between text-left"
               >
@@ -35,14 +40,21 @@ export default function FAQ() {
                   }`}
                 />
               </button>
-              {openIndex === i && (
-                <div className="px-6 pb-4 pt-0">
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed pl-8">{item.a}</p>
-                </div>
-              )}
+              <div id={`faq-answer-${i}`} hidden={openIndex !== i} className="px-6 pb-4 pt-0">
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed pl-8">{item.a}</p>
+              </div>
             </div>
           ))}
         </div>
+        {t.faq.questions.length > 4 && (
+          <button
+            type="button"
+            onClick={() => { setShowAll(!showAll); setOpenIndex(null); }}
+            className="mt-6 rounded-lg px-4 py-2 font-medium text-emerald-700 underline underline-offset-4 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-300"
+          >
+            {showAll ? t.faq.show_less : `${t.faq.show_more} (${t.faq.questions.length - 4})`}
+          </button>
+        )}
       </div>
     </section>
   );
