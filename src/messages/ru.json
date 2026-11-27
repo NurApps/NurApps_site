@@ -15,7 +15,10 @@
     "subtitle": "Приложения с открытым исходным кодом",
     "description": "Мы создаём свободное программное обеспечение для всех. Все наши приложения доступны на GitHub и распространяются под открытыми лицензиями.",
     "github": "GitHub",
-    "explore_apps": "Смотреть приложения"
+    "explore_apps": "Смотреть приложения",
+    "eyebrow": "Свободное ПО под лицензиями MIT, GPL и AGPL",
+    "index_title": "Сейчас в каталоге",
+    "apps_label": "Приложения NurApps"
   },
   "about": {
     "title": "О нас",
@@ -56,7 +59,9 @@
     "platforms": "Платформы",
     "size": "Размер",
     "views": "Просмотров",
-    "downloads": "Загрузок"
+    "downloads": "Загрузок",
+    "search_placeholder": "Поиск по названию или описанию",
+    "shown": "Показано"
   },
   "faq": {
     "title": "Часто задаваемые вопросы",
@@ -87,7 +92,8 @@
       }
     ],
     "show_more": "Показать ещё вопросы",
-    "show_less": "Скрыть дополнительные вопросы"
+    "show_less": "Скрыть дополнительные вопросы",
+    "subtitle": "Не нашли ответ? Откройте Issue на GitHub или напишите в Telegram."
   },
   "news": {
     "title": "Новости NurApps",
@@ -96,15 +102,34 @@
     "no_news": "Новостей пока нет"
   },
   "footer": {
-    "copyright": "NurApps. Все права защищены.",
+    "copyright": "© 2026 NurApps",
     "made_with": "Сделано с",
     "open_source": "Открытый исходный код",
-    "contact": "Контакты"
+    "contact": "Контакты",
+    "license": "Лицензия GPL-3.0",
+    "telegram": "Telegram"
   },
   "stats": {
     "total_apps": "Приложений",
     "total_downloads": "Загрузок",
     "total_stars": "Звёзд на GitHub",
     "active_devs": "Разработчиков"
+  },
+  "newsletter": {
+    "title": "Следите за обновлениями",
+    "text": "Релизы, исправления и планы — в нашем Telegram-канале. Без рекламы.",
+    "cta": "Открыть канал"
+  },
+  "ui": {
+    "skip_to_content": "Перейти к содержимому",
+    "scroll_top": "Наверх",
+    "language": "Сменить язык",
+    "theme": "Тема оформления",
+    "theme_light": "Светлая",
+    "theme_dark": "Тёмная",
+    "theme_system": "Системная",
+    "menu_open": "Открыть меню",
+    "menu_close": "Закрыть меню",
+    "to_home": "NurApps — на главную"
   }
 }

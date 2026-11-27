@@ -10,5 +10,5 @@ const icons = {
 
 export default function AppIcon({ app, className }: { app: Pick<AppInfo, "category">; className: string }) {
   const Icon = icons[app.category as keyof typeof icons] ?? Package;
-  return <Icon aria-hidden="true" className={className} />;
+  return <Icon aria-hidden="true" className={className} strokeWidth={1.75} />;
 }

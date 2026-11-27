@@ -26,6 +26,8 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
     const dialog = dialogRef.current;
     if (!dialog) return;
     dialog.showModal();
+    // Chrome may focus the scrollable panel instead of honoring autoFocus.
+    dialog.querySelector<HTMLButtonElement>("button[data-autofocus]")?.focus();
   }, []);
 
   return (
@@ -35,29 +37,30 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
       aria-describedby="app-dialog-description"
       onClose={onClose}
       onClick={(event) => { if (event.target === event.currentTarget) closeDialog(); }}
-      className="fixed inset-0 z-[100] m-0 flex h-full w-full max-h-none max-w-none items-center justify-center border-0 bg-transparent p-4 text-gray-900 backdrop:bg-black/60 backdrop:backdrop-blur-sm dark:text-gray-100"
+      className="fixed inset-0 z-50 m-0 flex h-full w-full max-h-none max-w-none items-center justify-center border-0 bg-transparent p-4 text-gray-900 backdrop:bg-gray-950/50 backdrop:backdrop-blur-sm dark:text-gray-100"
     >
-      <div className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+      <div className="relative max-h-[85dvh] w-full max-w-2xl overflow-y-auto rounded-3xl focus:outline-none bg-white shadow-lift ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
         {/* Header */}
-        <div className="sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 p-6 flex items-start justify-between z-10">
+        <div className="sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 p-6 flex items-start justify-between z-10">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[18px] bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
               <AppIcon app={app} className="h-8 w-8" />
             </div>
             <div>
-              <h2 id="app-dialog-title" className="text-2xl font-bold text-gray-900 dark:text-white">{app.name}</h2>
+              <h2 id="app-dialog-title" className="text-2xl font-semibold tracking-tight text-gray-950 dark:text-white">{app.name}</h2>
               <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 font-mono">{app.license}</span>
-                <span>v{app.latestVersion}</span>
+                <span className="rounded-[6px] bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-800">{app.license}</span>
+                <span className="font-mono text-xs tabular-nums">v{app.latestVersion}</span>
               </div>
             </div>
           </div>
           <button
             type="button"
             autoFocus
+            data-autofocus
             onClick={closeDialog}
             aria-label={t.catalog.close}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+            className="pressable rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
           >
             <X aria-hidden="true" className="w-5 h-5" />
           </button>
@@ -66,18 +69,18 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
         <div className="p-6 space-y-6">
           {/* Description */}
           <div>
-            <p id="app-dialog-description" className="text-gray-600 dark:text-gray-300 leading-relaxed">{app.description[locale]}</p>
+            <p id="app-dialog-description" className="max-w-[62ch] text-gray-600 dark:text-gray-300 leading-relaxed">{app.description[locale]}</p>
           </div>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
             {[
-              { icon: Download, value: app.stats.downloads.toLocaleString(), label: t.catalog.downloads },
-              { icon: Eye, value: app.stats.views.toLocaleString(), label: t.catalog.views },
-              { icon: Star, value: app.stats.stars.toString(), label: "Stars" },
+              { icon: Download, value: app.stats.downloads.toLocaleString(locale), label: t.catalog.downloads },
+              { icon: Eye, value: app.stats.views.toLocaleString(locale), label: t.catalog.views },
+              { icon: Star, value: app.stats.stars.toLocaleString(locale), label: "GitHub stars" },
             ].map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center p-3 rounded-xl bg-gray-50 dark:bg-gray-800">
-                <Icon className="w-5 h-5 mx-auto mb-1 text-emerald-500" />
-                <div className="text-lg font-bold text-gray-900 dark:text-white">{value}</div>
+              <div key={label} className="rounded-xl bg-gray-50 p-4 dark:bg-gray-800/60">
+                <Icon aria-hidden="true" strokeWidth={1.75} className="mb-3 h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+                <div className="font-mono text-lg font-semibold tabular-nums text-gray-950 dark:text-white">{value}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">{label}</div>
               </div>
             ))}
@@ -91,9 +94,9 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
               {app.platforms.map((p) => (
                 <span
                   key={p}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-sm font-medium capitalize"
+                  className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium"
                 >
-                  {p}
+                  {platformLabels[p]}
                 </span>
               ))}
             </div>
@@ -102,7 +105,7 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
           {/* Requirements */}
           <div>
             <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{t.catalog.requirements}</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded-xl">
+            <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/60 p-4 rounded-xl">
               {app.requirements[locale]}
             </p>
           </div>
@@ -118,7 +121,7 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+                    className="inline-flex items-center gap-2 pressable rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
                   >
                     <Download aria-hidden="true" className="h-5 w-5" />
                     {t.catalog.download_for} {platformLabels[platform]}
@@ -129,7 +132,7 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
                     href={app.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+                    className="inline-flex items-center gap-2 pressable rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
                   >
                     <ExternalLink aria-hidden="true" className="h-5 w-5" />
                     {t.catalog.open_web_app}
@@ -140,7 +143,7 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
                     href={`https://github.com/${app.repo}/releases`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white transition-colors hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+                    className="inline-flex items-center gap-2 pressable rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white hover:bg-emerald-800 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
                   >
                     <Download aria-hidden="true" className="h-5 w-5" />
                     {t.catalog.view_releases}
@@ -152,15 +155,15 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
               href={`https://github.com/${app.repo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition-all hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="inline-flex items-center justify-center gap-2 self-start pressable rounded-xl bg-gray-100 px-5 py-3 font-semibold text-gray-800 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
-              <ExternalLink className="w-5 h-5" />
+              <ExternalLink aria-hidden="true" className="w-5 h-5" />
               {t.catalog.source_code}
             </a>
           </div>
 
           {/* Versions */}
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <div className="ring-1 ring-gray-200 dark:ring-gray-800 rounded-xl overflow-hidden">
             <button
               type="button"
               aria-expanded={showVersions}
@@ -172,25 +175,25 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
               {showVersions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
 
-            <div id="app-versions" hidden={!showVersions} className="border-t border-gray-200 dark:border-gray-700">
+            <div id="app-versions" hidden={!showVersions} className="border-t border-gray-100 dark:border-gray-800">
                 {app.versions.map((v, i) => (
                   <div key={v.version} className={`px-4 py-3 ${i > 0 ? "border-t border-gray-100 dark:border-gray-800" : ""}`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-sm font-bold text-gray-900 dark:text-white">v{v.version}</span>
+                        <span className="font-mono text-sm font-semibold tabular-nums text-gray-900 dark:text-white">v{v.version}</span>
                         {i === 0 && (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-xs">
+                          <span className="px-2 py-0.5 rounded-[5px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[11px] font-medium">
                             {t.catalog.latest_version}
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                         <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
+                          <Calendar aria-hidden="true" className="w-3 h-3" />
                           {v.date}
                         </span>
                         <span className="flex items-center gap-1">
-                          <HardDrive className="w-3 h-3" />
+                          <HardDrive aria-hidden="true" className="w-3 h-3" />
                           {v.size}
                         </span>
                       </div>
@@ -206,10 +209,10 @@ export default function AppModal({ app, onClose }: { app: AppInfo; onClose: () =
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            className="px-3 py-1.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-emerald-600 dark:hover:text-emerald-400 pressable focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                           >
                             <Download aria-hidden="true" className="w-3 h-3 inline mr-1" />
-                            {platform}
+                            {platformLabels[platform as keyof typeof platformLabels] ?? platform}
                           </a>
                         )
                       ))}

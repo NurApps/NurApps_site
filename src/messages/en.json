@@ -15,12 +15,15 @@
     "subtitle": "Open-source applications",
     "description": "We create free software for everyone. All our apps are available on GitHub and distributed under open licenses.",
     "github": "GitHub",
-    "explore_apps": "Explore Apps"
+    "explore_apps": "Explore apps",
+    "eyebrow": "Free software under MIT, GPL and AGPL",
+    "index_title": "In the catalog now",
+    "apps_label": "NurApps applications"
   },
   "about": {
-    "title": "About Us",
+    "title": "About us",
     "content": "NurApps is a team of developers building high-quality open-source applications. Our mission is to make technology accessible to everyone. All our projects are distributed under open licenses, and we welcome community contributions.",
-    "values_title": "Our Values",
+    "values_title": "Our values",
     "values": [
       "Open source — transparency and trust",
       "Accessibility — apps for all platforms",
@@ -29,7 +32,7 @@
     ]
   },
   "catalog": {
-    "title": "Our Apps",
+    "title": "Our apps",
     "subtitle": "Discover our projects",
     "all": "All",
     "search": "Search apps",
@@ -56,10 +59,12 @@
     "platforms": "Platforms",
     "size": "Size",
     "views": "Views",
-    "downloads": "Downloads"
+    "downloads": "Downloads",
+    "search_placeholder": "Search by name or description",
+    "shown": "Showing"
   },
   "faq": {
-    "title": "Frequently Asked Questions",
+    "title": "Frequently asked questions",
     "questions": [
       {
         "q": "What is NurApps?",
@@ -87,7 +92,8 @@
       }
     ],
     "show_more": "Show more questions",
-    "show_less": "Hide extra questions"
+    "show_less": "Hide extra questions",
+    "subtitle": "Didn’t find an answer? Open an issue on GitHub or message us on Telegram."
   },
   "news": {
     "title": "NurApps News",
@@ -96,15 +102,34 @@
     "no_news": "No news yet"
   },
   "footer": {
-    "copyright": "NurApps. All rights reserved.",
+    "copyright": "© 2026 NurApps",
     "made_with": "Made with",
     "open_source": "Open Source",
-    "contact": "Contact"
+    "contact": "Contact",
+    "license": "GPL-3.0 license",
+    "telegram": "Telegram"
   },
   "stats": {
     "total_apps": "Apps",
     "total_downloads": "Downloads",
     "total_stars": "GitHub Stars",
     "active_devs": "Developers"
+  },
+  "newsletter": {
+    "title": "Stay up to date",
+    "text": "Releases, fixes and plans — in our Telegram channel. No ads.",
+    "cta": "Open channel"
+  },
+  "ui": {
+    "skip_to_content": "Skip to content",
+    "scroll_top": "Back to top",
+    "language": "Change language",
+    "theme": "Color theme",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System",
+    "menu_open": "Open menu",
+    "menu_close": "Close menu",
+    "to_home": "NurApps — back to top"
   }
 }
