@@ -23,6 +23,7 @@ export default function Newsletter() {
               {t.newsletter.title}
             </h2>
             <p className="mt-3 max-w-[52ch] text-lg text-gray-700 dark:text-gray-300">{t.newsletter.text}</p>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{t.newsletter.note}</p>
           </div>
           <a
             href="https://t.me/nurapps"

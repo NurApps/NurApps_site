@@ -2,10 +2,11 @@
 
 import { useI18n } from "./I18nProvider";
 import { news } from "@/config/news";
-import { Newspaper } from "lucide-react";
 
 export default function News() {
   const { t, locale } = useI18n();
+  if (news.length === 0) return null;
+
   const formatDate = (iso: string) =>
     new Intl.DateTimeFormat(locale === "ru" ? "ru-RU" : "en-US", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
@@ -19,12 +20,6 @@ export default function News() {
           </div>
         </div>
 
-        {news.length === 0 ? (
-          <div className="flex items-center gap-4 rounded-2xl bg-white p-8 shadow-soft dark:bg-gray-900 dark:shadow-none">
-            <Newspaper aria-hidden="true" className="h-5 w-5 text-gray-400" strokeWidth={1.75} />
-            <p className="text-gray-600 dark:text-gray-400">{t.news.no_news}</p>
-          </div>
-        ) : (
           <ol className="border-t border-gray-300/70 dark:border-gray-800">
             {news.map((item, i) => (
               <li key={item.id}>
@@ -49,7 +44,6 @@ export default function News() {
               </li>
             ))}
           </ol>
-        )}
       </div>
     </section>
   );

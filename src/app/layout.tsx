@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Onest, JetBrains_Mono } from "next/font/google";
+import ru from "@/messages/ru.json";
 import "./globals.css";
 
 const onest = Onest({
@@ -14,24 +15,29 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const description = "NurApps — каталог приложений с открытым исходным кодом";
+const { title, description } = ru.meta;
 
 export const metadata: Metadata = {
-  title: "NurApps",
+  title,
   description,
   applicationName: "NurApps",
+  metadataBase: new URL("https://nurapps.vercel.app"),
+  alternates: { canonical: "/" },
+  manifest: "/manifest.webmanifest",
+  referrer: "strict-origin-when-cross-origin",
+  robots: { index: true, follow: true },
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     siteName: "NurApps",
-    title: "NurApps",
+    title,
     description,
     locale: "ru_RU",
     alternateLocale: ["en_US"],
   },
   twitter: {
     card: "summary",
-    title: "NurApps",
+    title,
     description,
   },
 };

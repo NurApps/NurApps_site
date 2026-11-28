@@ -2,16 +2,22 @@
 
 import { useI18n } from "./I18nProvider";
 import { useRef, useState } from "react";
-import { apps } from "@/config/apps";
+import { apps, type Platform } from "@/config/apps";
 import AppModal from "./AppModal";
 import AppIcon from "./AppIcon";
-import { ArrowRight, Download, Eye, Star, Search, SearchX } from "lucide-react";
+import StatusBadge from "./StatusBadge";
+import { ArrowRight, Search, SearchX } from "lucide-react";
 
-type Platform = "all" | "windows" | "android" | "linux" | "web";
+type Filter = "all" | Platform;
+
+// Только платформы, под которые в каталоге есть хотя бы одна программа.
+const platforms = (["windows", "android", "linux", "web", "telegram"] as const).filter((p) =>
+  apps.some((app) => app.platforms.includes(p)),
+);
 
 export default function AppCatalog() {
   const { t, locale } = useI18n();
-  const [filter, setFilter] = useState<Platform>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const openerRef = useRef<HTMLButtonElement | null>(null);
@@ -23,23 +29,18 @@ export default function AppCatalog() {
 
   const query = search.trim().toLowerCase();
   const filteredApps = apps.filter((app) => {
-    const matchesPlatform = filter === "all" || app.platforms.includes(filter as never);
+    const matchesPlatform = filter === "all" || app.platforms.includes(filter);
     const matchesSearch =
       query === "" ||
       app.name.toLowerCase().includes(query) ||
+      app.tagline[locale].toLowerCase().includes(query) ||
       app.description[locale].toLowerCase().includes(query);
     return matchesPlatform && matchesSearch;
   });
 
-  const platformLabels: Record<Exclude<Platform, "all">, string> = {
-    windows: t.catalog.windows,
-    android: t.catalog.android,
-    linux: t.catalog.linux,
-    web: t.catalog.web,
-  };
-  const platformFilters: { key: Platform; label: string }[] = [
+  const platformFilters: { key: Filter; label: string }[] = [
     { key: "all", label: t.catalog.all },
-    ...(Object.keys(platformLabels) as Exclude<Platform, "all">[]).map((key) => ({ key, label: platformLabels[key] })),
+    ...platforms.map((key) => ({ key, label: t.catalog[key] })),
   ];
 
   const fieldClass =
@@ -73,7 +74,7 @@ export default function AppCatalog() {
                 <select
                   id="platform-filter"
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value as Platform)}
+                  onChange={(e) => setFilter(e.target.value as Filter)}
                   className={`${fieldClass} px-4`}
                 >
                   {platformFilters.map(({ key, label }) => <option key={key} value={key}>{label}</option>)}
@@ -88,7 +89,6 @@ export default function AppCatalog() {
               <span className="font-mono tabular-nums text-gray-900 dark:text-gray-100">{filteredApps.length}</span>
               <span className="font-mono tabular-nums"> / {apps.length}</span>
             </p>
-            <p className="text-xs">{t.catalog.stats_note}</p>
           </div>
 
           {filteredApps.length === 0 ? (
@@ -110,43 +110,27 @@ export default function AppCatalog() {
               {filteredApps.map((app) => (
                 <li key={app.id}>
                   <article className="group relative flex h-full flex-col rounded-2xl bg-white p-6 shadow-soft ring-1 ring-gray-200/70 transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:ring-emerald-300 dark:bg-gray-900 dark:shadow-none dark:ring-gray-800 dark:hover:ring-emerald-800">
-                    <div className="mb-5 flex items-start justify-between">
-                      <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                        <AppIcon app={app} className="h-6 w-6" />
-                      </span>
-                      <span className="rounded-[6px] bg-gray-100 px-1.5 py-0.5 font-mono text-[11px] font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                        {app.license}
-                      </span>
+                    <div className="mb-5 flex items-start justify-between gap-3">
+                      <AppIcon app={app} className="h-12 w-12 rounded-[14px]" />
+                      <StatusBadge status={app.status} />
                     </div>
 
-                    <h3 className="text-lg font-semibold tracking-tight text-gray-950 dark:text-white">
-                      {app.name}
-                      <span className="ml-2 font-mono text-xs font-normal tabular-nums text-gray-500">v{app.latestVersion}</span>
-                    </h3>
+                    <h3 className="text-lg font-semibold tracking-tight text-gray-950 dark:text-white">{app.name}</h3>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <p className="mt-1 text-sm font-medium text-gray-800 dark:text-gray-200">{app.tagline[locale]}</p>
+
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                       {app.description[locale]}
                     </p>
 
                     <p className="mt-4 text-xs font-medium text-gray-500 dark:text-gray-400">
-                      {app.platforms.map((p) => platformLabels[p]).join(" · ")}
+                      {app.platforms.map((p) => t.catalog[p]).join(" · ")}
                     </p>
 
                     <div className="mt-auto pt-6">
-                      <dl className="mb-5 flex items-center gap-4 border-t border-gray-100 pt-4 font-mono text-xs tabular-nums text-gray-500 dark:border-gray-800 dark:text-gray-400">
-                        <div className="flex items-center gap-1.5" title={t.catalog.downloads}>
-                          <dt><Download aria-label={t.catalog.downloads} className="h-3.5 w-3.5" strokeWidth={1.75} /></dt>
-                          <dd>{app.stats.downloads.toLocaleString(locale)}</dd>
-                        </div>
-                        <div className="flex items-center gap-1.5" title={t.catalog.views}>
-                          <dt><Eye aria-label={t.catalog.views} className="h-3.5 w-3.5" strokeWidth={1.75} /></dt>
-                          <dd>{app.stats.views.toLocaleString(locale)}</dd>
-                        </div>
-                        <div className="flex items-center gap-1.5" title="GitHub stars">
-                          <dt><Star aria-label="GitHub stars" className="h-3.5 w-3.5" strokeWidth={1.75} /></dt>
-                          <dd>{app.stats.stars.toLocaleString(locale)}</dd>
-                        </div>
-                      </dl>
+                      <p className="mb-5 border-t border-gray-100 pt-4 font-mono text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                        {app.license ?? "—"}
+                      </p>
                       <button
                         type="button"
                         onClick={(event) => {

@@ -4,6 +4,7 @@ import { useI18n } from "./I18nProvider";
 import { apps } from "@/config/apps";
 import { ArrowDown, ArrowUpRight, Github } from "lucide-react";
 import AppIcon from "./AppIcon";
+import StatusBadge from "./StatusBadge";
 
 export default function Hero() {
   const { t } = useI18n();
@@ -35,6 +36,8 @@ export default function Hero() {
           <p className="mt-5 max-w-[58ch] text-lg leading-relaxed text-gray-600 dark:text-gray-400">
             {t.hero.description}
           </p>
+
+          <p className="mt-3 max-w-[58ch] text-sm text-gray-500 dark:text-gray-400">{t.hero.note}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
             <button
@@ -77,11 +80,9 @@ export default function Hero() {
                     <span className="font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                      <AppIcon app={app} className="h-[18px] w-[18px]" />
-                    </span>
+                    <AppIcon app={app} className="h-9 w-9 rounded-[10px]" />
                     <span className="flex-1 font-medium text-gray-900 dark:text-gray-100">{app.name}</span>
-                    <span className="font-mono text-xs tabular-nums text-gray-500 dark:text-gray-500">v{app.latestVersion}</span>
+                    <StatusBadge status={app.status} />
                   </button>
                 </li>
               ))}

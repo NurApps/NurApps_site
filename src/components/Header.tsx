@@ -3,15 +3,19 @@
 import { useTheme } from "./ThemeProvider";
 import { useI18n } from "./I18nProvider";
 import { useEffect, useRef, useState } from "react";
+import { news } from "@/config/news";
 import { Menu, X, Sun, Moon, Monitor, Check } from "lucide-react";
 
-const sections = [
+const allSections = [
   { id: "hero", key: "home" },
   { id: "catalog", key: "apps" },
   { id: "faq", key: "faq" },
   { id: "news", key: "news" },
   { id: "about", key: "about" },
 ] as const;
+
+// Раздел новостей скрыт, пока записей нет.
+const sections = allSections.filter(({ id }) => id !== "news" || news.length > 0);
 
 function useActiveSection() {
   const [active, setActive] = useState<string>("hero");
