@@ -2,63 +2,93 @@
 
 import { useI18n } from "./I18nProvider";
 import { apps } from "@/config/apps";
-import { ArrowDown, Github } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Github } from "lucide-react";
 import AppIcon from "./AppIcon";
+import StatusBadge from "./StatusBadge";
 
 export default function Hero() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
+  const toCatalog = () => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950" />
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400/10 dark:bg-emerald-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-400/10 dark:bg-teal-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-300/5 dark:bg-emerald-600/5 rounded-full blur-3xl" />
-      </div>
+    <section id="hero" className="relative flex min-h-[100dvh] items-center overflow-hidden pb-20 pt-28 sm:pb-24">
+      <div aria-hidden="true" className="dot-grid absolute inset-0" />
+      <div
+        aria-hidden="true"
+        className="absolute -right-40 -top-40 h-[640px] w-[640px] rounded-full bg-[radial-gradient(closest-side,var(--color-emerald-200),transparent)] opacity-60 dark:bg-[radial-gradient(closest-side,var(--color-emerald-950),transparent)] dark:opacity-80"
+      />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold text-emerald-700 dark:text-emerald-300 mb-6">
-          {t.hero.title}
-        </h1>
+      <div className="relative mx-auto grid w-full max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
+        <div className="lg:col-span-7">
+          <p className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-emerald-800 dark:text-emerald-300">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400" />
+            {t.hero.eyebrow}
+          </p>
 
-        <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-4 font-medium">
-          {t.hero.subtitle}
-        </p>
+          <h1 className="text-[clamp(3.5rem,11vw,8.5rem)] font-semibold leading-[0.88] tracking-[-0.045em] text-gray-950 dark:text-white">
+            {t.hero.title}
+          </h1>
 
-        <p className="text-lg text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-          {t.hero.description}
-        </p>
+          <p className="mt-8 max-w-[30ch] text-2xl font-medium leading-snug tracking-tight text-gray-800 sm:text-3xl dark:text-gray-200">
+            {t.hero.subtitle}
+          </p>
 
-        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-10" aria-label={locale === "ru" ? "Приложения NurApps" : "NurApps applications"}>
-          {apps.map((app) => (
-            <li key={app.id} className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-200">
-              <AppIcon app={app} className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              {app.name}
-            </li>
-          ))}
-        </ul>
+          <p className="mt-5 max-w-[58ch] text-lg leading-relaxed text-gray-600 dark:text-gray-400">
+            {t.hero.description}
+          </p>
 
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            onClick={() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all transform hover:scale-105 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
-          >
-            {t.hero.explore_apps}
-            <ArrowDown className="w-5 h-5" />
-          </button>
-          <a
-            href="https://github.com/NurApps"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
-          >
-            <Github className="w-5 h-5" />
-            {t.hero.github}
-          </a>
+          <p className="mt-3 max-w-[58ch] text-sm text-gray-500 dark:text-gray-400">{t.hero.note}</p>
+
+          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <button
+              type="button"
+              onClick={toCatalog}
+              className="pressable group inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3.5 font-semibold text-white shadow-soft hover:bg-emerald-800 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
+            >
+              {t.hero.explore_apps}
+              <ArrowDown aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+            </button>
+            <a
+              href="https://github.com/NurApps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pressable group inline-flex items-center gap-2 rounded-lg font-semibold text-gray-700 hover:text-gray-950 dark:text-gray-300 dark:hover:text-white"
+            >
+              <Github aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />
+              <span className="underline decoration-gray-300 decoration-2 underline-offset-[6px] transition-colors group-hover:decoration-emerald-600 dark:decoration-gray-700 dark:group-hover:decoration-emerald-400">
+                {t.hero.github}
+              </span>
+              <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+          </div>
         </div>
+
+        <aside className="lg:col-span-5 lg:col-start-8 lg:self-end">
+          <div className="rounded-2xl bg-white/70 p-2 shadow-lift ring-1 ring-gray-200/80 backdrop-blur-md dark:bg-gray-900/60 dark:shadow-none dark:ring-gray-800">
+            <p className="flex items-baseline justify-between px-4 pb-2 pt-3 text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span>{t.hero.index_title}</span>
+              <span className="font-mono tabular-nums">{String(apps.length).padStart(2, "0")}</span>
+            </p>
+            <ul aria-label={t.hero.apps_label} className="space-y-0.5">
+              {apps.map((app, i) => (
+                <li key={app.id}>
+                  <button
+                    type="button"
+                    onClick={toCatalog}
+                    className="pressable group flex w-full items-center gap-4 rounded-xl px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-800/70"
+                  >
+                    <span className="font-mono text-xs tabular-nums text-gray-400 dark:text-gray-600">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <AppIcon app={app} className="h-9 w-9 rounded-[10px]" />
+                    <span className="flex-1 font-medium text-gray-900 dark:text-gray-100">{app.name}</span>
+                    <StatusBadge status={app.status} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
       </div>
     </section>
   );

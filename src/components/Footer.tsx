@@ -1,37 +1,44 @@
 "use client";
 
 import { useI18n } from "./I18nProvider";
-import { Github, Heart } from "lucide-react";
+import { Github, Send } from "lucide-react";
 
 export default function Footer() {
   const { t } = useI18n();
 
-  return (
-    <footer className="py-8 bg-gray-950 border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold">
-              N
-            </div>
-            <span className="text-sm text-gray-400">{t.footer.copyright}</span>
-          </div>
+  const linkClass =
+    "inline-flex items-center gap-1.5 rounded-md transition-colors hover:text-gray-950 dark:hover:text-white";
 
-          <div className="flex items-center gap-4 text-sm text-gray-400">
-            <span className="flex items-center gap-1">
-              {t.footer.made_with} <Heart className="w-3.5 h-3.5 text-red-500" />
-            </span>
-            <a
-              href="https://github.com/NurApps"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-emerald-400 transition-colors"
-            >
-              <Github className="w-4 h-4" />
-              {t.footer.open_source}
-            </a>
-          </div>
+  return (
+    <footer className="border-t border-gray-200 py-10 dark:border-gray-800">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 text-sm text-gray-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8 dark:text-gray-400">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-emerald-700 text-[11px] font-semibold text-emerald-50 dark:bg-emerald-600">
+            N
+          </span>
+          <span>{t.footer.copyright}</span>
+          <span aria-hidden="true" className="text-gray-300 dark:text-gray-700">·</span>
+          <span>{t.footer.open_source}</span>
         </div>
+
+        <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <a href="https://github.com/NurApps" target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <Github aria-hidden="true" className="h-4 w-4" strokeWidth={1.75} />
+            GitHub
+          </a>
+          <a href="https://t.me/nurapps" target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <Send aria-hidden="true" className="h-4 w-4" strokeWidth={1.75} />
+            {t.footer.telegram}
+          </a>
+          <a
+            href="https://github.com/NurApps/NurApps_site/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={linkClass}
+          >
+            {t.footer.license}
+          </a>
+        </nav>
       </div>
     </footer>
   );

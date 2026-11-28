@@ -2,47 +2,48 @@
 
 import { useI18n } from "./I18nProvider";
 import { news } from "@/config/news";
-import { Calendar, ArrowRight } from "lucide-react";
 
 export default function News() {
   const { t, locale } = useI18n();
+  if (news.length === 0) return null;
+
+  const formatDate = (iso: string) =>
+    new Intl.DateTimeFormat(locale === "ru" ? "ru-RU" : "en-US", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
   return (
-    <section id="news" className="py-24 bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{t.news.title}</h2>
-          <p className="text-lg text-gray-500 dark:text-gray-400">{t.news.subtitle}</p>
+    <section id="news" className="bg-gray-100/70 pb-28 pt-24 sm:pb-32 dark:bg-gray-900/40">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl dark:text-white">{t.news.title}</h2>
+            <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">{t.news.subtitle}</p>
+          </div>
         </div>
 
-        {news.length === 0 ? (
-          <p className="text-center text-gray-400 dark:text-gray-500">{t.news.no_news}</p>
-        ) : (
-          <div className="space-y-4">
-            {news.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl">{item.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 mb-2">
-                      <Calendar className="w-4 h-4" />
-                      {item.date}
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          <ol className="border-t border-gray-300/70 dark:border-gray-800">
+            {news.map((item, i) => (
+              <li key={item.id}>
+                <article className="group grid gap-3 border-b border-gray-300/70 py-8 transition-colors sm:grid-cols-12 sm:gap-8 dark:border-gray-800">
+                  <time
+                    dateTime={item.date}
+                    className="font-mono text-sm tabular-nums text-gray-500 sm:col-span-3 sm:pt-1.5 dark:text-gray-400"
+                  >
+                    {formatDate(item.date)}
+                  </time>
+                  <div className="sm:col-span-9 lg:col-span-7">
+                    <h3
+                      className={`font-semibold tracking-tight text-gray-950 transition-colors group-hover:text-emerald-800 dark:text-white dark:group-hover:text-emerald-300 ${
+                        i === 0 ? "text-2xl sm:text-3xl" : "text-xl sm:text-2xl"
+                      }`}
+                    >
                       {item.title[locale]}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {item.content[locale]}
-                    </p>
+                    <p className="mt-3 max-w-[62ch] leading-relaxed text-gray-600 dark:text-gray-400">{item.content[locale]}</p>
                   </div>
-                </div>
-              </div>
+                </article>
+              </li>
             ))}
-          </div>
-        )}
+          </ol>
       </div>
     </section>
   );

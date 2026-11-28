@@ -2,16 +2,22 @@
 
 import { useI18n } from "./I18nProvider";
 import { useRef, useState } from "react";
-import { apps } from "@/config/apps";
+import { apps, type Platform } from "@/config/apps";
 import AppModal from "./AppModal";
 import AppIcon from "./AppIcon";
-import { Download, Eye, Star, Search } from "lucide-react";
+import StatusBadge from "./StatusBadge";
+import { ArrowRight, Search, SearchX } from "lucide-react";
 
-type Platform = "all" | "windows" | "android" | "linux" | "web";
+type Filter = "all" | Platform;
+
+// Только платформы, под которые в каталоге есть хотя бы одна программа.
+const platforms = (["windows", "android", "linux", "web", "telegram"] as const).filter((p) =>
+  apps.some((app) => app.platforms.includes(p)),
+);
 
 export default function AppCatalog() {
   const { t, locale } = useI18n();
-  const [filter, setFilter] = useState<Platform>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const openerRef = useRef<HTMLButtonElement | null>(null);
@@ -21,137 +27,127 @@ export default function AppCatalog() {
     requestAnimationFrame(() => openerRef.current?.focus());
   };
 
+  const query = search.trim().toLowerCase();
   const filteredApps = apps.filter((app) => {
-    const matchesPlatform = filter === "all" || app.platforms.includes(filter as never);
+    const matchesPlatform = filter === "all" || app.platforms.includes(filter);
     const matchesSearch =
-      search === "" ||
-      app.name.toLowerCase().includes(search.toLowerCase()) ||
-      app.description[locale].toLowerCase().includes(search.toLowerCase());
+      query === "" ||
+      app.name.toLowerCase().includes(query) ||
+      app.tagline[locale].toLowerCase().includes(query) ||
+      app.description[locale].toLowerCase().includes(query);
     return matchesPlatform && matchesSearch;
   });
 
-  const platformFilters: { key: Platform; label: string }[] = [
+  const platformFilters: { key: Filter; label: string }[] = [
     { key: "all", label: t.catalog.all },
-    { key: "windows", label: t.catalog.windows },
-    { key: "android", label: t.catalog.android },
-    { key: "linux", label: t.catalog.linux },
-    { key: "web", label: t.catalog.web },
+    ...platforms.map((key) => ({ key, label: t.catalog[key] })),
   ];
+
+  const fieldClass =
+    "w-full rounded-xl bg-white py-3 text-gray-900 shadow-soft ring-1 ring-gray-200 transition-shadow placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-600 dark:bg-gray-900 dark:text-white dark:shadow-none dark:ring-gray-800 dark:placeholder:text-gray-500 dark:focus:ring-emerald-400";
 
   return (
     <>
-      <section id="catalog" className="py-24 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{t.catalog.title}</h2>
-            <p className="text-lg text-gray-500 dark:text-gray-400">{t.catalog.subtitle}</p>
+      <section id="catalog" className="pb-28 pt-24 sm:pb-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 grid gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-6">
+              <h2 className="text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl dark:text-white">{t.catalog.title}</h2>
+              <p className="mt-3 max-w-[50ch] text-lg text-gray-600 dark:text-gray-400">{t.catalog.subtitle}</p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row lg:col-span-6">
+              <div className="relative flex-1">
+                <label htmlFor="app-search" className="sr-only">{t.catalog.search}</label>
+                <Search aria-hidden="true" strokeWidth={1.75} className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-400" />
+                <input
+                  id="app-search"
+                  type="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={t.catalog.search_placeholder}
+                  className={`${fieldClass} pl-11 pr-4`}
+                />
+              </div>
+              <div className="sm:w-48">
+                <label htmlFor="platform-filter" className="sr-only">{t.catalog.filter_by_platform}</label>
+                <select
+                  id="platform-filter"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value as Filter)}
+                  className={`${fieldClass} px-4`}
+                >
+                  {platformFilters.map(({ key, label }) => <option key={key} value={key}>{label}</option>)}
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div className="mx-auto mb-8 flex max-w-2xl flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <label htmlFor="app-search" className="sr-only">{t.catalog.search}</label>
-              <Search aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                id="app-search"
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={locale === "ru" ? "Поиск приложений..." : "Search apps..."}
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-gray-900 placeholder-gray-500 transition-all focus:ring-2 focus:ring-emerald-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
-              />
-            </div>
-            <div className="sm:w-52">
-              <label htmlFor="platform-filter" className="sr-only">{t.catalog.filter_by_platform}</label>
-              <select
-                id="platform-filter"
-                value={filter}
-                onChange={(e) => setFilter(e.target.value as Platform)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-              >
-                {platformFilters.map(({ key, label }) => <option key={key} value={key}>{label}</option>)}
-              </select>
-            </div>
+          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2 border-b border-gray-200 pb-3 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
+            <p aria-live="polite">
+              {t.catalog.shown}{" "}
+              <span className="font-mono tabular-nums text-gray-900 dark:text-gray-100">{filteredApps.length}</span>
+              <span className="font-mono tabular-nums"> / {apps.length}</span>
+            </p>
           </div>
-          <p className="mb-8 text-center text-sm text-gray-500 dark:text-gray-400">{t.catalog.stats_note}</p>
 
-          {/* Grid */}
           {filteredApps.length === 0 ? (
-            <div role="status" className="py-12 text-center">
-              <p className="mb-4 text-gray-500 dark:text-gray-400">{t.catalog.no_results}</p>
+            <div role="status" className="flex flex-col items-start gap-4 rounded-2xl bg-gray-100/70 px-8 py-14 dark:bg-gray-900/60 sm:items-center sm:text-center">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-gray-500 shadow-soft dark:bg-gray-800 dark:text-gray-400 dark:shadow-none">
+                <SearchX aria-hidden="true" className="h-5 w-5" strokeWidth={1.75} />
+              </span>
+              <p className="max-w-[40ch] text-gray-600 dark:text-gray-400">{t.catalog.no_results}</p>
               <button
                 type="button"
                 onClick={() => { setSearch(""); setFilter("all"); }}
-                className="rounded-lg px-4 py-2 font-medium text-emerald-700 underline underline-offset-4 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-300"
+                className="pressable rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-soft ring-1 ring-gray-200 hover:ring-gray-300 dark:bg-gray-800 dark:text-white dark:shadow-none dark:ring-gray-700"
               >
                 {t.catalog.reset_filters}
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {filteredApps.map((app) => (
-                <article
-                  key={app.id}
-                  className="group flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                      <AppIcon app={app} className="h-7 w-7" />
+                <li key={app.id}>
+                  <article className="group relative flex h-full flex-col rounded-2xl bg-white p-6 shadow-soft ring-1 ring-gray-200/70 transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:ring-emerald-300 dark:bg-gray-900 dark:shadow-none dark:ring-gray-800 dark:hover:ring-emerald-800">
+                    <div className="mb-5 flex items-start justify-between gap-3">
+                      <AppIcon app={app} className="h-12 w-12 rounded-[14px]" />
+                      <StatusBadge status={app.status} />
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                        {app.name}
-                      </h3>
-                      <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-xs font-mono">
-                          {app.license}
-                        </span>
-                        <span className="text-xs">v{app.latestVersion}</span>
-                      </div>
-                    </div>
-                  </div>
 
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
-                    {app.description[locale]}
-                  </p>
+                    <h3 className="text-lg font-semibold tracking-tight text-gray-950 dark:text-white">{app.name}</h3>
 
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {app.platforms.map((p) => (
-                      <span
-                        key={p}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-xs font-medium capitalize"
+                    <p className="mt-1 text-sm font-medium text-gray-800 dark:text-gray-200">{app.tagline[locale]}</p>
+
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      {app.description[locale]}
+                    </p>
+
+                    <p className="mt-4 text-xs font-medium text-gray-500 dark:text-gray-400">
+                      {app.platforms.map((p) => t.catalog[p]).join(" · ")}
+                    </p>
+
+                    <div className="mt-auto pt-6">
+                      <p className="mb-5 border-t border-gray-100 pt-4 font-mono text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                        {app.license ?? "—"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          openerRef.current = event.currentTarget;
+                          setSelectedApp(app.id);
+                        }}
+                        aria-label={`${t.catalog.view_details}: ${app.name}`}
+                        className="inline-flex items-center gap-1.5 rounded-lg text-sm transition-colors font-semibold text-emerald-800 after:absolute after:inset-0 after:rounded-2xl hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
                       >
-                        {p}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Download className="w-3.5 h-3.5" />
-                      {app.stats.downloads.toLocaleString()}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5" />
-                      {app.stats.views.toLocaleString()}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5" />
-                      {app.stats.stars}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      openerRef.current = event.currentTarget;
-                      setSelectedApp(app.id);
-                    }}
-                    className="mt-5 self-start rounded-lg font-medium text-emerald-700 underline underline-offset-4 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-300"
-                  >
-                    {t.catalog.view_details}
-                  </button>
-                </article>
+                        {t.catalog.view_details}
+                        <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      </button>
+                    </div>
+                  </article>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
       </section>

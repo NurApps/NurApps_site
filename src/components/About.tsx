@@ -1,38 +1,36 @@
 "use client";
 
 import { useI18n } from "./I18nProvider";
-import { Github, Heart } from "lucide-react";
 
 export default function About() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
 
   return (
-    <section id="about" className="py-24 bg-white dark:bg-gray-950">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{t.about.title}</h2>
+    <section id="about" className="pb-32 pt-28">
+      <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
+        <div className="lg:col-span-6">
+          <h2 className="text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl dark:text-white">{t.about.title}</h2>
+          <p className="mt-6 max-w-[58ch] text-xl leading-relaxed text-gray-700 dark:text-gray-300">{t.about.content}</p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-12 text-center">
-            {t.about.content}
-          </p>
-
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">{t.about.values_title}</h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {t.about.values.map((value, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800"
-              >
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center flex-shrink-0">
-                  <Heart className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed pt-1">{value}</p>
-              </div>
-            ))}
-          </div>
+        <div className="lg:col-span-5 lg:col-start-8 lg:pt-3">
+          <h3 className="mb-6 text-sm font-medium text-gray-500 dark:text-gray-400">{t.about.values_title}</h3>
+          <ol className="space-y-px overflow-hidden rounded-2xl bg-gray-200 ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-800">
+            {t.about.values.map((value, i) => {
+              const [head, ...rest] = value.split(" — ");
+              return (
+                <li key={i} className="flex gap-5 bg-white p-5 dark:bg-gray-900">
+                  <span className="font-mono text-sm tabular-nums text-emerald-700 dark:text-emerald-400">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="leading-relaxed">
+                    <span className="font-semibold text-gray-950 dark:text-white">{head}</span>
+                    {rest.length > 0 && <span className="text-gray-600 dark:text-gray-400"> — {rest.join(" — ")}</span>}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
     </section>

@@ -11,14 +11,16 @@ import About from "@/components/About";
 import Newsletter from "@/components/Newsletter";
 import ScrollToTop from "@/components/ScrollToTop";
 import Footer from "@/components/Footer";
+import SkipLink from "@/components/SkipLink";
 
 export default function Home() {
   return (
     <ThemeProvider>
       <I18nProvider>
-        <div className="min-h-screen">
+        <div className="min-h-[100dvh]">
+          <SkipLink />
           <Header />
-          <main>
+          <main id="main" tabIndex={-1} className="focus:outline-none">
             <Hero />
             <AppCatalog />
             <Newsletter />
